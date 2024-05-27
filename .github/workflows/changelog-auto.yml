@@ -1,0 +1,32 @@
+# This workflow will run main.py when a release is created, adding to my changelog site.
+
+name: Auto create changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+    
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: install python packages
+        run: |
+          python -m pip install uv
+          uv pip install -r requirements.txt
+          
+      - name: execute py script # create changelog
+        run: python main.py
